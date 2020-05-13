@@ -11,6 +11,5 @@ function expandPoints(meta: { basePoint: number; points: number[][] }) {
       points.push(points[index - 1] + point || point)
       return points
     }, [])
-    .map((point) => point + meta.basePoint)
-    .map((point) => String.fromCodePoint(point))
+    .map((point) => String.fromCodePoint(meta.basePoint + point))
 }

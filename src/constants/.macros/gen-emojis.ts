@@ -24,7 +24,7 @@ const diffPoints = points
     return prev
   }, [])
 
-console.log('Min Point:', basePoint.toString(16))
+console.log('Base Point:', basePoint.toString(16))
 console.log('Diff Points:', diffPoints)
 
 fs.writeFileSync(path.join(__dirname, '..', 'emojis.json'), JSON.stringify({ basePoint, points: diffPoints }))
