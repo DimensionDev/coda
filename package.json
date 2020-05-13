@@ -2,15 +2,16 @@
   "name": "@dimensiondev/coda",
   "version": "0.1.0",
   "description": "Make Codec Interesting Again. ([I:b])",
-  "main": "src/index.ts",
+  "main": "./dist-cjs/index.js",
+  "module": "./dist-ems/index.js",
   "repository": "https://github.com/DimensionDev/coda.git",
   "author": "clearloop <udtrokia@gmail.com>",
   "license": "AGPL-3.0-or-later",
-  "private": false,
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf dist-* && ts-node src/constants/.macros/gen-emojis.ts && tsc && tsc -p tsconfig.es.json",
     "lint": "tsc --noEmit && eslint src/ --ext .ts --fix",
-    "test": "jest __tests__"
+    "test": "jest src",
+    "prepublishOnly": "npm run build build"
   },
   "lint-staged": {
     "*.ts": [
@@ -38,11 +39,10 @@
     "esm": "^3.2.25",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
-    "jest-environment-jsdom-fourteen": "^1.0.1",
     "jest-esm-transformer": "^1.0.0",
-    "jest-webextension-mock": "^3.5.4",
     "lint-staged": "^10.2.2",
     "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
     "ts-jest": "^25.5.1",
     "tslint": "^6.1.2",
     "typescript": "^3.8.3"
