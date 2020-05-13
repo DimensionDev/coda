@@ -52,96 +52,67 @@ import * as Base1024 from './base1024'
  * |  3   |  0011  |   3   |
  * |  6   |  0110  |   6   |
  * |  b   |  1011  |   11  |
- *
- * @property {Point[]} points - Code points
- *
- * @method  toHex    - Convert code points to hex string
- * @method  toBase64 - Convert code points to base64 string
- * @method  toString - Convert code points to utf-16 string
  */
-export class Codec {
-  /**
-   * Build `Codec` from hex string
-   *
-   * @param {string} input - hex string
-   */
-  static fromHex(input: string) {
-    return new Codec(Hex.decode(input))
-  }
+export enum Codec {
+  Hex = 'Hex',
+  UTF8 = 'UTF8',
+  Base64 = 'Base64',
+  Base1024 = 'Base1024',
+  Buffer = 'Buffer',
+}
 
-  /**
-   * Build `Codec` from usc2 string string
-   *
-   * @param {string} usc2  - the common javascript `string`
-   */
-  static fromUtf8(input: string) {
-    return new Codec(Utf8.decode(input))
+export function to(input: string, inputCodec: Codec): Uint8Array // decode (shorthand)
+export function to(input: string, inputCodec: Codec, outputCodec: Codec.Buffer): Uint8Array // decode
+export function to(input: Uint8Array, inputCodec: Codec.Buffer, outputCodec: Codec): string // encode
+export function to(input: Uint8Array, inputCodec: Codec.Buffer, outputCodec: Codec.Buffer): Uint8Array // copy
+export function to(input: string, inputCodec: Codec, outputCodec: Codec): string // decode and encode
+export function to(input: string | Uint8Array, inputCodec: Codec, outputCodec = Codec.Buffer): string | Uint8Array {
+  if (isUint8Array(input) && inputCodec === Codec.Buffer) {
+    return outputCodec === Codec.Buffer ? Uint8Array.from(input) : encode(input, outputCodec)
+  } else if (typeof input === 'string') {
+    if (outputCodec === Codec.Buffer) {
+      return decode(input, inputCodec)
+    } else if (inputCodec !== Codec.Buffer) {
+      return encode(decode(input, inputCodec), outputCodec)
+    }
   }
+  throw new Error(`${Codec[inputCodec]} to ${Codec[outputCodec]} not supported`)
+}
 
-  /**
-   * Build `Codec` from base64 string
-   *
-   * @param {string} input - base64 string
-   */
-  static fromBase64(input: string) {
-    return new Codec(Base64.decode(input))
+export function encode(input: Uint8Array, codec = Codec.Base64) {
+  if (!isUint8Array(input)) {
+    throw new Error('input type error')
   }
-
-  /**
-   * Build `Codec` from base1024 string
-   *
-   * @param {string} input - base1024 string
-   */
-  static fromBase1024(input: string) {
-    return new Codec(Base1024.decode(input))
+  switch (codec) {
+    case Codec.Hex:
+      return Hex.encode(input)
+    case Codec.UTF8:
+      return Utf8.encode(input)
+    case Codec.Base64:
+      return Base64.encode(input)
+    case Codec.Base1024:
+      return Base1024.encode(input)
   }
+  throw new Error(`${Codec[codec]} not supported`)
+}
 
-  /**
-   * `Codec` class is `Uint8Array` based
-   */
-  private buffer: Uint8Array
-
-  /**
-   * Generate `Codec` from `Uint8Array` directly
-   *
-   * @param {Uint8Array} buffer - construct Codec by bytes
-   */
-  constructor(buffer: Uint8Array) {
-    this.buffer = Uint8Array.from(buffer)
+export function decode(input: string, codec = Codec.Base64) {
+  if (typeof input !== 'string') {
+    throw new Error('input type error')
   }
-
-  /**
-   * Return the byte array
-   */
-  public toBuffer() {
-    return Uint8Array.from(this.buffer)
+  switch (codec) {
+    case Codec.Hex:
+      return Hex.decode(input)
+    case Codec.UTF8:
+      return Utf8.decode(input)
+    case Codec.Base64:
+      return Base64.decode(input)
+    case Codec.Base1024:
+      return Base1024.decode(input)
   }
+  throw new Error(`${Codec[codec]} not supported`)
+}
 
-  /**
-   * Encoding `Codec` source to hex string
-   */
-  public toHex() {
-    return Hex.encode(this.buffer)
-  }
-
-  /**
-   * Encoding `Codec` source to utf-8 string
-   */
-  public toUtf8() {
-    return Utf8.encode(this.buffer)
-  }
-
-  /**
-   * Encoding `Codec` source to `base64` string
-   */
-  public toBase64() {
-    return Base64.encode(this.buffer)
-  }
-
-  /**
-   * Encoding `Codec` source to `base64` string
-   */
-  public toBase1024() {
-    return Base1024.encode(this.buffer)
-  }
+function isUint8Array(input: any): input is Uint8Array {
+  return Object.prototype.toString.call(input) === '[object Uint8Array]'
 }

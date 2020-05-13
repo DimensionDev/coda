@@ -1,1 +1,1 @@
-export { Codec } from './codec'
+export * from './codec'
