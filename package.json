@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Make Codec Interesting Again. ([I:b])",
   "main": "./dist-cjs/index.js",
-  "module": "./dist-ems/index.js",
+  "module": "./dist-esm/index.js",
   "repository": "https://github.com/DimensionDev/coda.git",
   "author": "clearloop <udtrokia@gmail.com>",
   "license": "AGPL-3.0-or-later",
