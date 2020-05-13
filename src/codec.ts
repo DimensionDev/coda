@@ -63,10 +63,10 @@ export class Codec {
   /**
    * Build `Codec` from hex string
    *
-   * @param {string} hex - hex string
+   * @param {string} input - hex string
    */
-  static fromHex(hex: string): Codec {
-    return new Codec(Hex.decode(hex))
+  static fromHex(input: string) {
+    return new Codec(Hex.decode(input))
   }
 
   /**
@@ -74,87 +74,74 @@ export class Codec {
    *
    * @param {string} usc2  - the common javascript `string`
    */
-  static fromUtf8(utf8: string): Codec {
-    return new Codec(Utf8.decode(utf8))
+  static fromUtf8(input: string) {
+    return new Codec(Utf8.decode(input))
   }
 
   /**
    * Build `Codec` from base64 string
    *
-   * @param {string} b64 - base64 string
+   * @param {string} input - base64 string
    */
-  static fromBase64(b64: string): Codec {
-    return new Codec(Base64.decode(b64))
+  static fromBase64(input: string) {
+    return new Codec(Base64.decode(input))
   }
 
   /**
    * Build `Codec` from base1024 string
    *
-   * @param {string} b1024 - base1024 string
+   * @param {string} input - base1024 string
    */
-  static fromBase1024(b1024: string): Codec {
-    return new Codec(Base1024.decode(b1024))
+  static fromBase1024(input: string) {
+    return new Codec(Base1024.decode(input))
   }
 
   /**
    * `Codec` class is `Uint8Array` based
    */
-  private bytes: Uint8Array
+  private buffer: Uint8Array
 
   /**
    * Generate `Codec` from `Uint8Array` directly
    *
-   * @param {Uint8Array} bytes - construct Codec by bytes
+   * @param {Uint8Array} buffer - construct Codec by bytes
    */
-  constructor(bytes: Uint8Array) {
-    this.bytes = bytes
+  constructor(buffer: Uint8Array) {
+    this.buffer = Uint8Array.from(buffer)
   }
 
   /**
    * Return the byte array
-   *
-   * @return {Uint8Array} - bytes
    */
-  public toBytes(): Uint8Array {
-    return this.bytes
+  public toBuffer() {
+    return Uint8Array.from(this.buffer)
   }
 
   /**
    * Encoding `Codec` source to hex string
-   *
-   * @return {string} - hex string
    */
-  public toHex(): string {
-    return Hex.encode(this.bytes)
+  public toHex() {
+    return Hex.encode(this.buffer)
   }
 
   /**
    * Encoding `Codec` source to utf-8 string
-   *
-   * @return {string} - utf8 string
    */
-  public toUtf8(): string {
-    return Utf8.encode(this.bytes)
+  public toUtf8() {
+    return Utf8.encode(this.buffer)
   }
 
   /**
    * Encoding `Codec` source to `base64` string
-   *
-   * @return {string} - base64 string
    */
-  public toBase64(): string {
-    return Base64.encode(this.bytes)
+  public toBase64() {
+    return Base64.encode(this.buffer)
   }
 
   /**
    * Encoding `Codec` source to `base64` string
-   *
-   * @return {string} - base64 string
    */
-  public toBase1024(): string {
-    return Base1024.encode(this.bytes)
+  public toBase1024() {
+    return Base1024.encode(this.buffer)
   }
 }
-
-// Export default
-export default Codec

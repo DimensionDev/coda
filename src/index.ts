@@ -1,4 +1,1 @@
-import Codec from './codec'
-
-// Exports
-export default Codec
+export { Codec } from './codec'
