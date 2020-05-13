@@ -1,5 +1,5 @@
-import { Codec } from '../src'
-import { base1024Emojis as EMOJIS } from '../src/constants'
+import { Codec } from '..'
+import { base1024Emojis as EMOJIS } from '../constants'
 
 // "Maskbook" Contants
 const MASKBOOK_HEX = '4d61736b626f6f6b'

@@ -1,0 +1,10 @@
+!/dist-cjs
+!/dist-esm
+
+.*
+/jest.config.js
+
+/scripts
+
+constants/.macros
+__tests__
