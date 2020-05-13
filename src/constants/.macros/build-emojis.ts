@@ -42,7 +42,7 @@ function makeBlob() {
   let offset = 0
   buffer.writeUInt32BE(basePoint)
   offset += 4
-  const level1 = diffPoints.filter(([index, value]) => index < 256 && value < 256, [])
+  const level1 = diffPoints.filter(([index, value]) => index < 256 && value < 256)
   buffer.writeUInt8(level1.length, offset)
   offset += 1
   level1.forEach(([index, value]) => {
@@ -51,7 +51,7 @@ function makeBlob() {
     buffer.writeUInt8(value, offset)
     offset += 1
   })
-  const level2 = diffPoints.filter(([index, value]) => index > 256 && value < 256, [])
+  const level2 = diffPoints.filter(([index, value]) => index > 256 && value < 256)
   buffer.writeUInt8(level2.length, offset)
   offset += 1
   level2.forEach(([index, value]) => {
@@ -60,7 +60,7 @@ function makeBlob() {
     buffer.writeUInt8(value, offset)
     offset += 1
   })
-  const level3 = diffPoints.filter(([index, value]) => index > 256 && value > 256, [])
+  const level3 = diffPoints.filter(([index, value]) => index > 256 && value > 256)
   buffer.writeUInt8(level3.length, offset)
   offset += 1
   level3.forEach(([index, value]) => {
