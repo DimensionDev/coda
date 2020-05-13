@@ -1,53 +1,30 @@
-import * as fs from "fs";
-import * as path from "path";
-import emojis from "./twemojis.json";
+#!/usr/bin/env npx ts-node
+import fs from 'fs'
+import path from 'path'
+import { source } from './twemojis.json'
 
-/**
- * Constants
- */
-const EMOJIS = emojis.source;
+const points = source
+  .filter((point) => point.length < 6)
+  .map((point) => Number.parseInt(point, 16))
+  .filter((point) => {
+    const orignal = String.fromCodePoint(point)
+    return orignal.codePointAt(0) === point && orignal.length === 2
+  })
+  .sort((a, b) => a - b)
+  .slice(0, 1024)
 
-/**
- * Sorting emojis
- * --------------
- * + no nation && flags
- * + independent emojis - without `'-'`
- * + code point doesn't change after encoding to emoji string
- * + the length of emoji string is `2`
- */
-const rSort = EMOJIS
-    .filter((e: string) => e.length < 6)
-    .map((point: string): number => Number.parseInt(point, 16))
-    .filter((e: number): boolean => {
-        const s = String.fromCodePoint(e);
-        return s.codePointAt(0) === e && s.length === 2
-    })
-    .sort((a: number, b: number) => a - b)
-    .slice(0, 1024)
-    // delete the following line if you want to generate the code point array
-    .map((point: number) => String.fromCodePoint(point));
+const basePoint = Math.min(...points)
 
-/**
- * Get the code point ranges of emojis
- * ------------------------------------
- * ```
- * function _emojiRanges(r: number[]) {
- *     const ranges: Record<number, [number, number]> = {};
- *     let ptr: number = 0;
- *     for (const i in r) {
- *         if (r[i] + 1 == r[+i + 1]) {
- *             ranges[ptr][1] = r[+i + 1]
- *             continue;
- *         }
- *
- *         ptr = r[i];
- *         ranges[ptr] = [ptr, ptr];
- *     }
- *     return ranges
- * }
- * ```
-*/////////// generating emojis
-; (() => {
-    const json = JSON.stringify({ points: rSort }) + "\n";
-    fs.writeFileSync(path.join(__dirname, "../emojis.json"), json);
-})();
+const diffPoints = points
+  .map((point) => point - basePoint)
+  .map((point, index, points) => points[index] - points[index - 1] || point)
+  .reduce((prev: [number, number][], curr, index) => {
+    if (curr === 1) return prev
+    prev.push([index, curr])
+    return prev
+  }, [])
+
+console.log('Min Point:', basePoint.toString(16))
+console.log('Diff Points:', diffPoints)
+
+fs.writeFileSync(path.join(__dirname, '..', 'emojis.json'), JSON.stringify({ basePoint, points: diffPoints }))
