@@ -9,18 +9,27 @@ function expandBlob(blob: string) {
   let offset = 0
   const basePoint = buffer.readUInt32BE(offset)
   offset += 4
-  const compactLength = buffer.readUInt8(offset)
+  const level1Length = buffer.readUInt8(offset)
   offset += 1
-  const normalLength = buffer.readUInt8(offset)
-  offset += 1
-  for (let i = 0; i < compactLength; i += 1) {
+  for (let i = 0; i < level1Length; i += 1) {
     const index = buffer.readUInt8(offset)
     offset += 1
     const value = buffer.readUInt8(offset)
     offset += 1
     points.push([index, value])
   }
-  for (let i = 0; i < normalLength; i += 1) {
+  const level2Length = buffer.readUInt8(offset)
+  offset += 1
+  for (let i = 0; i < level2Length; i += 1) {
+    const index = buffer.readUInt16BE(offset)
+    offset += 2
+    const value = buffer.readUInt8(offset)
+    offset += 1
+    points.push([index, value])
+  }
+  const level3Length = buffer.readUInt8(offset)
+  offset += 1
+  for (let i = 0; i < level3Length; i += 1) {
     const index = buffer.readUInt16BE(offset)
     offset += 2
     const value = buffer.readUInt16BE(offset)
