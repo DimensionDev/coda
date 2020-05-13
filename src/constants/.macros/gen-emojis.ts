@@ -13,7 +13,7 @@ const points = source
   .sort((a, b) => a - b)
   .slice(0, 1024)
 
-const basePoint = Math.min(...points)
+const basePoint = Math.min(...points) - 1
 
 const diffPoints = points
   .map((point) => point - basePoint)

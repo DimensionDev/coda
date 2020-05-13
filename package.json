@@ -8,10 +8,11 @@
   "author": "clearloop <udtrokia@gmail.com>",
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "build": "rimraf dist-* && npx ts-node src/constants/.macros/gen-emojis.ts && tsc && tsc -p tsconfig.es.json",
+    "build:emojis": "npx ts-node src/constants/.macros/gen-emojis.ts",
+    "build": "yarn build:emojis && rimraf dist-* && tsc && tsc -p tsconfig.es.json",
     "lint": "tsc --noEmit && eslint src/ --ext .ts --fix",
     "test": "jest src",
-    "prepublishOnly": "npm run build build"
+    "prepublishOnly": "yarn build"
   },
   "lint-staged": {
     "*.ts": [
@@ -20,8 +21,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn run lint && yarn run test",
+      "pre-commit": "yarn build:emojis && lint-staged",
+      "pre-push": "yarn lint && yarn test",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
