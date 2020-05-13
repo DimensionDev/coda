@@ -18,11 +18,11 @@ const basePoint = points[0] - 1
 const diffPoints = points
   .map((point) => point - basePoint)
   .map((point, index, points) => points[index] - points[index - 1] || point)
-  .reduce((points: [number, number][], point, index) => {
+  .reduce((points: Record<string, number>, point, index) => {
     if (point === 1) return points
-    points.push([index, point])
+    points[index.toString(36)] = point
     return points
-  }, [])
+  }, {})
 
 console.log('Base Point:', basePoint.toString(16))
 console.log('Diff Points:', diffPoints)
