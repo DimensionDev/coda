@@ -1,4 +1,4 @@
-import { Codec } from '..'
+import { to, Codec, decode, encode } from '..'
 import { base1024Emojis as EMOJIS } from '../constants'
 
 // "Maskbook" Contants
@@ -20,31 +20,31 @@ const SECRET_AES_WITH_LINK =
   'Pw==.Auqv1q+v53lJseTRpSgQGQPN2OOOqPRD3rIIJMtqY9+i.0%40'
 
 // Codec basic equal chain
-function eqChain(codec: Codec) {
-  expect(codec.toHex()).toBe(MASKBOOK_HEX)
-  expect(codec.toBase64()).toBe(MASKBOOK_BASE_64)
-  expect(codec.toUtf8()).toBe(MASKBOOK_UTF_8)
-  expect(codec.toBase1024()).toBe(MASKBOOK_BASE_1024)
+function eqChain(codec: Uint8Array) {
+  expect(to(codec, Codec.Buffer, Codec.Hex)).toBe(MASKBOOK_HEX)
+  expect(to(codec, Codec.Buffer, Codec.UTF8)).toBe(MASKBOOK_UTF_8)
+  expect(to(codec, Codec.Buffer, Codec.Base64)).toBe(MASKBOOK_BASE_64)
+  expect(to(codec, Codec.Buffer, Codec.Base1024)).toBe(MASKBOOK_BASE_1024)
 }
 
 // Build Codec from hex
 test('build codec from hex', () => {
-  eqChain(Codec.fromHex(MASKBOOK_HEX))
-})
-
-// Build Codec from base64
-test('build codec from base64', () => {
-  eqChain(Codec.fromBase64(MASKBOOK_BASE_64))
+  eqChain(to(MASKBOOK_HEX, Codec.Hex))
 })
 
 // Build Codec from utf-8
 test('build codec from utf-8', () => {
-  eqChain(Codec.fromUtf8(MASKBOOK_UTF_8))
+  eqChain(to(MASKBOOK_UTF_8, Codec.UTF8))
+})
+
+// Build Codec from base64
+test('build codec from base64', () => {
+  eqChain(to(MASKBOOK_BASE_64, Codec.Base64))
 })
 
 // Build Codec from base-1024
 test('build codec from base1024', () => {
-  eqChain(Codec.fromBase1024(MASKBOOK_BASE_1024))
+  eqChain(to(MASKBOOK_BASE_1024, Codec.Base1024))
 })
 
 // Validate the chosen emojis
@@ -55,14 +55,16 @@ test('validate the chosen emojis', () => {
 
 // Real world AES example
 test('real world AES example', () => {
-  const codec = Codec.fromUtf8(SECRET_AES_WITH_LINK)
+  const decoded = to(SECRET_AES_WITH_LINK, Codec.UTF8)
   // check hex
-  const hex = codec.toHex()
-  expect(Codec.fromHex(hex)).toEqual(codec)
+  expect(areEqual(decode(encode(decoded, Codec.Hex), Codec.Hex), decoded)).toBe(true)
   // check base64
-  const b64 = codec.toBase64()
-  expect(Codec.fromBase64(b64)).toEqual(codec)
+  expect(areEqual(decode(encode(decoded, Codec.Base64), Codec.Base64), decoded)).toBe(true)
   // check base1024
-  const emojis = codec.toBase1024()
-  expect(Codec.fromBase1024(emojis)).toEqual(codec)
+  expect(areEqual(decode(encode(decoded, Codec.Base1024), Codec.Base1024), decoded)).toBe(true)
 })
+
+function areEqual(a: Uint8Array, b: Uint8Array) {
+  if (a.byteLength !== b.byteLength) return false
+  return a.every((value, index) => value === b[index])
+}

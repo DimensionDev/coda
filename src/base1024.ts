@@ -25,14 +25,14 @@ export function encode(input: Uint8Array): string {
     const delta = ((input[i + 3] & 0x3) << 8) | input[i + 4]
     points.push(alpha, beta, gamma, delta)
   }
-  return points.map((ch) => EMOJIS[ch]).join('')
+  return points.map((emoji) => EMOJIS[emoji]).join('')
 }
 
 /**
  * Encode Uint8Array to base1024
  */
 export function decode(input: string): Uint8Array {
-  const source: number[] = Array.from(input).map((e: string) => EMOJIS.indexOf(e))
+  const source = Array.from(input).map((emoji: string) => EMOJIS.indexOf(emoji))
 
   const points: number[] = []
   for (let i = 0; i < input.length; i += 4) {

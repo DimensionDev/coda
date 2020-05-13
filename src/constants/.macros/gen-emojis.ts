@@ -13,15 +13,15 @@ const points = source
   .sort((a, b) => a - b)
   .slice(0, 1024)
 
-const basePoint = Math.min(...points) - 1
+const basePoint = points[0] - 1
 
 const diffPoints = points
   .map((point) => point - basePoint)
   .map((point, index, points) => points[index] - points[index - 1] || point)
-  .reduce((prev: [number, number][], curr, index) => {
-    if (curr === 1) return prev
-    prev.push([index, curr])
-    return prev
+  .reduce((points: [number, number][], point, index) => {
+    if (point === 1) return points
+    points.push([index, point])
+    return points
   }, [])
 
 console.log('Base Point:', basePoint.toString(16))
