@@ -1,20 +1,23 @@
 import _Base1024Emojis from './emojis.json'
 
 // constants
-export const base1024Emojis = expandPoints(expandBlob(_Base1024Emojis))
+export const base1024Emojis = expandPoints(_Base1024Emojis)
 
-function expandBlob(meta: { basePoint: string; points: string }) {
+function expandPoints(meta: { basePoint: string; points: string }) {
   const parseBase36 = (value: string) => Number.parseInt(value, 36)
-  return {
-    basePoint: parseBase36(meta.basePoint),
-    points: meta.points.split(',').map((item) => item.split('-').map(parseBase36)),
+  const basePoint = parseBase36(meta.basePoint)
+  const exapndPair = (points: number[], pair: string) => {
+    const [index, value] = pair.split('-').map(parseBase36)
+    points[index] = value
+    return points
   }
-}
-
-function expandPoints(meta: { basePoint: number; points: number[][] }) {
-  const points: number[] = Array(1024).fill(1)
-  meta.points.forEach(([index, value]) => (points[index] = value))
-  return points
-    .reduce((points: number[], point, index) => (points.push(points[index - 1] + point || point), points), [])
-    .map((point) => String.fromCodePoint(meta.basePoint + point))
+  const restorePoint = (points: number[], point: number, index: number) => {
+    points.push(points[index - 1] + point || point)
+    return points
+  }
+  return meta.points
+    .split(',')
+    .reduce(exapndPair, Array(1024).fill(1))
+    .reduce(restorePoint, [])
+    .map((point) => String.fromCodePoint(basePoint + point))
 }
