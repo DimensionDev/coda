@@ -1,5 +1,5 @@
 import * as Hex from './hex'
-import * as Utf8 from './utf8'
+import * as UTF8 from './utf8'
 import * as Base64 from './base64'
 import * as Base1024 from './base1024'
 
@@ -64,7 +64,7 @@ export function encode(input: Uint8Array, codec = Codec.Base64) {
     case Codec.Hexadecimal:
       return Hex.encode(input)
     case Codec.UTF8:
-      return Utf8.encode(input)
+      return UTF8.encode(input)
     case Codec.Base64:
       return Base64.encode(input)
     case Codec.Base1024:
@@ -80,7 +80,7 @@ export function decode(input: string, codec = Codec.Base64) {
     case Codec.Hexadecimal:
       return Hex.decode(input)
     case Codec.UTF8:
-      return Utf8.decode(input)
+      return UTF8.decode(input)
     case Codec.Base64:
       return Base64.decode(input)
     case Codec.Base1024:
