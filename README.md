@@ -5,17 +5,13 @@ Make Codec Interesting Again. ([I:b])
 ## Usages
 
 ```javascript
-import Codec from "@dimensiondev/coda";
+import { Codec, encode, decode ) from "@dimensiondev/coda";
 
-;(() => {
-    // Build codec from utf8 string
-    const codec = Codec.fromUtf8("Maskbook");
-    
-    // Encode to any encoding you want
-    const hex = codec.toHex();
-    const b64 = codec.toBase64();
-    const emojis = codec.toBase1024();
-})();
+const decoded = decode("Maskbook", Codec.UTF8);
+
+encode(decoded, Codec.Hexadecimal); // '4d61736b626f6f6b'
+encode(decoded, Codec.Base64);      // 'TWFza2Jvb2s='
+encode(decoded, Codec.Base1024);    // '🐟🔂🏁🤖💧🚊😤🀄'
 ```
 
 ## Desc
