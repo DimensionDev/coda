@@ -27,54 +27,9 @@ const diffPoints = points
 console.log('Base Point:', basePoint.toString(16))
 console.log('Diff Points:', diffPoints.length)
 
-function makeJSON() {
-  const data = JSON.stringify({
-    basePoint,
-    points: diffPoints.map(([index, value]) => [index.toString(36), value]),
-  })
-  fs.writeFileSync(path.join(__dirname, '..', 'emojis.json'), data)
-  console.log('Make json format done')
-}
-
-function makeBlob() {
-  const buffer = Buffer.alloc(0x400)
-
-  let offset = 0
-  buffer.writeUInt32BE(basePoint)
-  offset += 4
-  const level1 = diffPoints.filter(([index, value]) => index < 256 && value < 256)
-  buffer.writeUInt8(level1.length, offset)
-  offset += 1
-  level1.forEach(([index, value]) => {
-    buffer.writeUInt8(index, offset)
-    offset += 1
-    buffer.writeUInt8(value, offset)
-    offset += 1
-  })
-  const level2 = diffPoints.filter(([index, value]) => index > 256 && value < 256)
-  buffer.writeUInt8(level2.length, offset)
-  offset += 1
-  level2.forEach(([index, value]) => {
-    buffer.writeUInt16BE(index, offset)
-    offset += 2
-    buffer.writeUInt8(value, offset)
-    offset += 1
-  })
-  const level3 = diffPoints.filter(([index, value]) => index > 256 && value > 256)
-  buffer.writeUInt8(level3.length, offset)
-  offset += 1
-  level3.forEach(([index, value]) => {
-    buffer.writeUInt16BE(index, offset)
-    offset += 2
-    buffer.writeUInt16BE(value, offset)
-    offset += 2
-  })
-  fs.writeFileSync(
-    path.join(__dirname, '..', 'emojis.blob.json'),
-    JSON.stringify(buffer.slice(0, offset).toString('base64')),
-  )
-  console.log('Make blob format done')
-}
-
-makeJSON()
-makeBlob()
+const data = JSON.stringify({
+  basePoint: basePoint.toString(36),
+  points: diffPoints.map(([index, value]) => [index, value].map((item) => item.toString(36)).join('-')).join(','),
+})
+fs.writeFileSync(path.join(__dirname, '..', 'emojis.json'), data)
+console.log('Make json format done')
