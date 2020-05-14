@@ -1,9 +1,10 @@
-import * as Hex from './hex'
+import type { ICodec } from './types'
+import * as Hexadecimal from './hexadecimal'
 import * as UTF8 from './utf8'
 import * as Base64 from './base64'
 import * as Base1024 from './base1024'
 
-export enum Codec {
+export const enum Codec {
   /**
    * Let's format the word `Mask`:
    *
@@ -56,38 +57,23 @@ export enum Codec {
   Base1024 = 'base1024',
 }
 
+const codecs: Record<Codec, ICodec> = {
+  [Codec.Hexadecimal]: Hexadecimal,
+  [Codec.UTF8]: UTF8,
+  [Codec.Base64]: Base64,
+  [Codec.Base1024]: Base1024,
+}
+
 export function encode(input: Uint8Array, codec = Codec.Base64) {
-  if (!isUint8Array(input)) {
+  if (Object.prototype.toString.call(input) !== '[object Uint8Array]') {
     throw new Error('input type error')
   }
-  switch (codec) {
-    case Codec.Hexadecimal:
-      return Hex.encode(input)
-    case Codec.UTF8:
-      return UTF8.encode(input)
-    case Codec.Base64:
-      return Base64.encode(input)
-    case Codec.Base1024:
-      return Base1024.encode(input)
-  }
+  return codecs[codec].encode(input)
 }
 
 export function decode(input: string, codec = Codec.Base64) {
   if (typeof input !== 'string') {
     throw new Error('input type error')
   }
-  switch (codec) {
-    case Codec.Hexadecimal:
-      return Hex.decode(input)
-    case Codec.UTF8:
-      return UTF8.decode(input)
-    case Codec.Base64:
-      return Base64.decode(input)
-    case Codec.Base1024:
-      return Base1024.decode(input)
-  }
-}
-
-function isUint8Array(input: any): input is Uint8Array {
-  return Object.prototype.toString.call(input) === '[object Uint8Array]'
+  return codecs[codec].decode(input)
 }

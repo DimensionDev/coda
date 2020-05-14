@@ -1,5 +1,5 @@
 export * from './codec'
-export * as Hex from './hex'
+export * as Hexadecimal from './hexadecimal'
 export * as UTF8 from './utf8'
 export * as Base64 from './base64'
 export * as Base1024 from './base1024'
