@@ -61,14 +61,25 @@ export enum Codec {
   Buffer = 'Buffer',
 }
 
-export function to(input: string, inputCodec: Codec): Uint8Array // decode (shorthand)
-export function to(input: string, inputCodec: Codec, outputCodec: Codec.Buffer): Uint8Array // decode
-export function to(input: Uint8Array, inputCodec: Codec.Buffer, outputCodec: Codec): string // encode
-export function to(input: Uint8Array, inputCodec: Codec.Buffer, outputCodec: Codec.Buffer): Uint8Array // copy
-export function to(input: string, inputCodec: Codec, outputCodec: Codec): string // decode and encode
-export function to(input: string | Uint8Array, inputCodec: Codec, outputCodec = Codec.Buffer): string | Uint8Array {
-  if (isUint8Array(input) && inputCodec === Codec.Buffer) {
-    return outputCodec === Codec.Buffer ? Uint8Array.from(input) : encode(input, outputCodec)
+/** decode (shorthand) */
+export function to(input: string, inputCodec: Codec): Uint8Array
+/** decode */
+export function to(input: string, inputCodec: Codec, outputCodec: Codec.Buffer): Uint8Array
+/** encode (shorthand) */
+export function to(input: Uint8Array, outputCodec: Codec): string
+/** encode */
+export function to(input: Uint8Array, inputCodec: Codec.Buffer, outputCodec: Codec): string
+/** copy */
+export function to(input: Uint8Array, inputCodec: Codec.Buffer, outputCodec: Codec.Buffer): Uint8Array
+/** decode and encode */
+export function to(input: string, inputCodec: Codec, outputCodec: Codec): string
+export function to(input: any, inputCodec: Codec, outputCodec = Codec.Buffer): any {
+  if (isUint8Array(input)) {
+    if (inputCodec === Codec.Buffer && outputCodec === Codec.Buffer) {
+      return Uint8Array.from(input)
+    } else {
+      return encode(input, outputCodec !== Codec.Buffer ? outputCodec : inputCodec)
+    }
   } else if (typeof input === 'string') {
     if (outputCodec === Codec.Buffer) {
       return decode(input, inputCodec)

@@ -21,10 +21,10 @@ const SECRET_AES_WITH_LINK =
 
 // Codec basic equal chain
 function eqChain(codec: Uint8Array) {
-  expect(to(codec, Codec.Buffer, Codec.Hex)).toBe(MASKBOOK_HEX)
-  expect(to(codec, Codec.Buffer, Codec.UTF8)).toBe(MASKBOOK_UTF_8)
-  expect(to(codec, Codec.Buffer, Codec.Base64)).toBe(MASKBOOK_BASE_64)
-  expect(to(codec, Codec.Buffer, Codec.Base1024)).toBe(MASKBOOK_BASE_1024)
+  expect(to(codec, Codec.Hex)).toBe(MASKBOOK_HEX)
+  expect(to(codec, Codec.UTF8)).toBe(MASKBOOK_UTF_8)
+  expect(to(codec, Codec.Base64)).toBe(MASKBOOK_BASE_64)
+  expect(to(codec, Codec.Base1024)).toBe(MASKBOOK_BASE_1024)
 }
 
 // Build Codec from hex
