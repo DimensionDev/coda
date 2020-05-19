@@ -29,10 +29,10 @@ console.log('Diff Points:', diffPoints.length)
 
 const toBase36 = (value: number) => value.toString(36)
 
-const data = JSON.stringify({
-  basePoint: toBase36(basePoint),
-  points: diffPoints.map(([index, value]) => [index, value].map(toBase36).join('-')).join(','),
-})
+const data = JSON.stringify([
+  toBase36(basePoint),
+  diffPoints.map(([index, value]) => [index, value].map(toBase36).join('-')).join(','),
+])
 
 fs.writeFileSync(path.join(__dirname, '..', 'emojis.json'), data)
 

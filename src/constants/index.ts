@@ -3,9 +3,9 @@ import _Base1024Emojis from './emojis.json'
 // constants
 export const base1024Emojis = expandPoints(_Base1024Emojis)
 
-function expandPoints(meta: { basePoint: string; points: string }) {
+function expandPoints([base, points]: string[]) {
   const parseBase36 = (value: string) => Number.parseInt(value, 36)
-  const basePoint = parseBase36(meta.basePoint)
+  const basePoint = parseBase36(base)
   const exapndPair = (points: number[], pair: string) => {
     const [index, value] = pair.split('-').map(parseBase36)
     points[index] = value
@@ -15,7 +15,7 @@ function expandPoints(meta: { basePoint: string; points: string }) {
     points.push(points[index - 1] + point || point)
     return points
   }
-  return meta.points
+  return points
     .split(',')
     .reduce(exapndPair, Array(1024).fill(1))
     .reduce(restorePoint, [])
