@@ -3,7 +3,7 @@
  */
 export function encode(input: Uint8Array): string {
   const decoded = new TextDecoder().decode(input)
-  if (typeof atob !== 'undefined') {
+  if (typeof btoa !== 'undefined') {
     return btoa(decoded)
   }
   return Buffer.from(decoded, 'utf-8').toString('base64')
