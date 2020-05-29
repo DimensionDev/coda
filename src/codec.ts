@@ -2,7 +2,7 @@ import type { ICodec } from './types'
 import * as Hexadecimal from './hexadecimal'
 import * as UTF8 from './utf8'
 import * as Base64 from './base64'
-import * as Base1024 from './base1024'
+import * as Base1024Emoji from './base1024emoji'
 
 export const enum Codec {
   /**
@@ -54,14 +54,14 @@ export const enum Codec {
    * |      | 1000010111 |  535  |
    * |      | 0011011011 |  219  |
    **/
-  Base1024 = 'base1024',
+  Base1024Emoji = 'base1024emoji',
 }
 
 const codecs: Record<Codec, ICodec> = {
   [Codec.Hexadecimal]: Hexadecimal,
   [Codec.UTF8]: UTF8,
   [Codec.Base64]: Base64,
-  [Codec.Base1024]: Base1024,
+  [Codec.Base1024Emoji]: Base1024Emoji,
 }
 
 export function encode(input: Uint8Array, codec = Codec.Base64) {

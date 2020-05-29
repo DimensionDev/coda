@@ -1,7 +1,7 @@
-import _Base1024Emojis from './emojis.json'
+import _Base1024Emoji_alphabet from './emojis.json'
 
 // constants
-export const base1024Emojis = expandPoints(_Base1024Emojis)
+export const Base1024Emoji_alphabet = expandPoints(_Base1024Emoji_alphabet)
 
 function expandPoints([base, points]: string[]) {
   const parseBase36 = (value: string) => Number.parseInt(value, 36)

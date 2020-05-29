@@ -1,8 +1,8 @@
 /* eslint-disable no-bitwise */
-import { base1024Emojis as EMOJIS } from './constants'
+import { Base1024Emoji_alphabet as EMOJIS } from './constants'
 
 /**
- * Trim 0 caches while decoding base1024 to Uint8ARray
+ * Trim 0 caches while decoding Base1024Emoji to Uint8ARray
  */
 function trimRight(input: Uint8Array): Uint8Array {
   for (let i = input.length; i > 0; i -= 1) {
@@ -14,7 +14,7 @@ function trimRight(input: Uint8Array): Uint8Array {
 }
 
 /**
- * Encode Uint8Array to base1024
+ * Encode Uint8Array to Base1024Emoji
  */
 export function encode(input: Uint8Array): string {
   const points: number[] = []
@@ -29,7 +29,7 @@ export function encode(input: Uint8Array): string {
 }
 
 /**
- * Encode Uint8Array to base1024
+ * Encode Uint8Array to Base1024Emoji
  */
 export function decode(input: string): Uint8Array {
   const source = Array.from(input).map((emoji: string) => EMOJIS.indexOf(emoji))
