@@ -13,10 +13,7 @@ const points = source
   .sort((a, b) => a - b)
   .slice(0, 1024)
 
-const basePoint = points[0] - 1
-
 const diffPoints = points
-  .map((point) => point - basePoint)
   .map((point, index, points) => points[index] - points[index - 1] || point)
   .reduce((points: [number, number][], value, index) => {
     if (value === 1) return points
@@ -24,15 +21,11 @@ const diffPoints = points
     return points
   }, [])
 
-console.log('Base Point:', basePoint.toString(16))
 console.log('Diff Points:', diffPoints.length)
 
 const toBase36 = (value: number) => value.toString(36)
 
-const data = JSON.stringify([
-  toBase36(basePoint),
-  diffPoints.map(([index, value]) => [index, value].map(toBase36).join('-')).join(','),
-])
+const data = JSON.stringify(diffPoints.map(([index, value]) => [index, value].map(toBase36).join('-')).join(','))
 
 fs.writeFileSync(path.join(__dirname, '..', 'emojis.json'), data)
 
