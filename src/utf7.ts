@@ -1,5 +1,4 @@
 /* eslint-disable no-plusplus,no-bitwise */
-
 function encodeToUTF7(input: string) {
   const output = new Uint8Array(input.length * 2)
   const view = new DataView(output.buffer)
@@ -18,27 +17,31 @@ function decodeFromUTF7(encoded: string) {
   return String.fromCharCode.apply(null, output)
 }
 
-function escapeReservedRegexStrings(items: string) {
+function escapeReserved(items: string) {
   return items.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-/** RFC 2152 */
-const setD = 'A-Za-z0-9' + escapeReservedRegexStrings("'(),-./:?")
-const setO = escapeReservedRegexStrings('!"#$%&*;<=>@[]^_\'{|}')
-const setW = escapeReservedRegexStrings(' \r\n\t')
-
-export function encode(input: string): string
-export function encode(input: string, mask: string): string
-export function encode(input: string, mask = '') {
-  const re = new RegExp('[^' + setD + escapeReservedRegexStrings(mask) + ']+', 'g')
-  return input.replace(re, (chunk) => '+' + (chunk === '+' ? '' : encodeToUTF7(chunk)) + '-')
+export function encode(input: string, reserved = "'(),-./:?") {
+  const re = new RegExp(`[^A-Za-z0-9${escapeReserved(reserved)}]+`, 'g')
+  return input.replace(re, toUTF7)
 }
 
-export const encodeAll = (input: string) => {
-  const re = new RegExp('[^' + setW + setD + setO + ']+', 'g')
-  return input.replace(re, (chunk) => '+' + (chunk === '+' ? '' : encodeToUTF7(chunk)) + '-')
+export function decode(input: string) {
+  const re = /\+([A-Za-z0-9/]*)-?/gi
+  return input.replace(re, fromUTF7)
 }
 
-export const decode = (input: string) => {
-  return input.replace(/\+([A-Za-z0-9/]*)-?/gi, (_, chunk) => (chunk === '' ? '+' : decodeFromUTF7(chunk)))
+function fromUTF7(_: string, match: string) {
+  if (match === '') {
+    return '+'
+  }
+  return decodeFromUTF7(match)
+}
+
+function toUTF7(chunk: string) {
+  let block = ''
+  if (chunk !== '+') {
+    block = encodeToUTF7(chunk)
+  }
+  return `+${block}-`
 }
