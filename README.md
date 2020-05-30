@@ -9,9 +9,9 @@ import { Codec, encode, decode ) from "@dimensiondev/coda";
 
 const decoded = decode("Maskbook", Codec.UTF8);
 
-encode(decoded, Codec.Hexadecimal); // '4d61736b626f6f6b'
-encode(decoded, Codec.Base64);      // 'TWFza2Jvb2s='
-encode(decoded, Codec.Base1024Emoji);    // '🐟🔂🏁🤖💧🚊😤🀄'
+encode(decoded, Codec.Hexadecimal);     // '4d61736b626f6f6b'
+encode(decoded, Codec.Base64);          // 'TWFza2Jvb2s='
+encode(decoded, Codec.Base1024Emoji);   // '🐟🔂🏁🤖💧🚊😤🀄'
 ```
 
 ## Desc
