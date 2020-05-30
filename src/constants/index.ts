@@ -1,4 +1,4 @@
-import _Base1024Emoji_alphabet from './emojis.json'
+import _Base1024EmojiAlphabet from './emojis.json'
 
 // constants
 export const Base1024EmojiAlphabet = expandPoints(_Base1024EmojiAlphabet)

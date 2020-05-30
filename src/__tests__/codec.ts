@@ -1,5 +1,5 @@
 import { Codec, decode, encode } from '..'
-import { Base1024Emoji_alphabet as EMOJIS } from '../constants'
+import { Base1024EmojiAlphabet as EMOJIS } from '../constants'
 
 const codecs: Record<Codec, string> = {
   [Codec.UTF8]: 'Maskbook',

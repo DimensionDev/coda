@@ -1,5 +1,5 @@
 /* eslint-disable no-bitwise */
-import { Base1024Emoji_alphabet as EMOJIS } from './constants'
+import { Base1024EmojiAlphabet as EMOJIS } from './constants'
 
 /**
  * Trim 0 caches while decoding Base1024Emoji to Uint8ARray
