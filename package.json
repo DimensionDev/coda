@@ -2,29 +2,29 @@
   "name": "@dimensiondev/coda",
   "version": "0.1.0",
   "description": "Make Codec Interesting Again. ([I:b])",
+  "repository": "https://github.com/DimensionDev/coda.git",
+  "license": "AGPL-3.0-or-later",
+  "author": "clearloop <udtrokia@gmail.com>",
   "main": "./dist-cjs/index.js",
   "module": "./dist-esm/index.js",
-  "repository": "https://github.com/DimensionDev/coda.git",
-  "author": "clearloop <udtrokia@gmail.com>",
-  "license": "AGPL-3.0-or-later",
   "scripts": {
-    "build:emojis": "npx ts-node src/constants/.macros/build-emojis.ts",
     "build": "yarn build:emojis && rimraf dist-* && tsc && tsc -p tsconfig.es.json",
+    "build:emojis": "npx ts-node src/constants/.macros/build-emojis.ts",
     "lint": "tsc --noEmit && eslint src/ --ext .ts --fix",
-    "test": "jest src",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "test": "jest src"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn build:emojis && lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-push": "yarn lint && yarn test"
+    }
   },
   "lint-staged": {
     "*.ts": [
       "eslint --ext .ts --fix"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn build:emojis && lint-staged",
-      "pre-push": "yarn lint && yarn test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
@@ -47,5 +47,8 @@
     "ts-jest": "^25.5.1",
     "tslint": "^6.1.2",
     "typescript": "^3.8.3"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }
