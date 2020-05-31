@@ -48,10 +48,9 @@ test('real world AES example', () => {
 // Base1024 safe tail fuzz
 test('base1024 safe tail fuzz', () => {
   const u8a = Uint8Array.from(
-    Array(0xff)
+    Array(0xfe)
       .fill(0)
-      .map((_, i) => i)
-      .reverse(),
+      .map((_, i) => i),
   )
   const encoded = encode(u8a, Codec.Base1024)
   const decoded = decode(encoded, Codec.Base1024)
