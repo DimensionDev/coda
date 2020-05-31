@@ -2,15 +2,20 @@
 import { base1024Emojis as EMOJIS } from './constants'
 
 /**
+ * Mask for empty tail
+ */
+const TAIL = '\ud83c\udfad'
+
+/**
  * Trim 0 caches while decoding base1024 to Uint8ARray
  */
-function trimRight(input: Uint8Array): Uint8Array {
+function trimRight(input: number[]): number[] {
   for (let i = input.length; i > 0; i -= 1) {
     if (input[i - 1] !== 0) {
       return input.slice(0, i)
     }
   }
-  return input
+  return []
 }
 
 /**
@@ -18,22 +23,36 @@ function trimRight(input: Uint8Array): Uint8Array {
  */
 export function encode(input: Uint8Array): string {
   const points: number[] = []
-  for (let i = 0; i < input.length; i += 5) {
+  const safe = input.length - (input.length % 5)
+  for (let i = 0; i <= safe; i += 5) {
     const alpha = ((input[i] & 0xff) << 2) | (input[i + 1] >> 6)
     const beta = ((input[i + 1] & 0x3f) << 4) | (input[i + 2] >> 4)
     const gamma = ((input[i + 2] & 0xf) << 6) | (input[i + 3] >> 2)
     const delta = ((input[i + 3] & 0x3) << 8) | input[i + 4]
-    points.push(alpha, beta, gamma, delta)
+    if (i >= safe) {
+      points.push(...trimRight([alpha, beta, gamma, delta]))
+    } else {
+      points.push(alpha, beta, gamma, delta)
+    }
   }
-  return points.map((emoji) => EMOJIS[emoji]).join('')
+
+  // Check the last 8 empty bits
+  const remainder = input[input.length - 1] === 0 ? TAIL : ''
+  return points.map((emoji) => EMOJIS[emoji]).join('') + remainder
 }
 
 /**
  * Encode Uint8Array to base1024
  */
 export function decode(input: string): Uint8Array {
-  const source = Array.from(input).map((emoji: string) => EMOJIS.indexOf(emoji))
+  let expand: number[] = []
+  if (input.endsWith(TAIL)) {
+    input = input.slice(0, input.length - TAIL.length)
+    expand = [0]
+  }
 
+  // Decode input string
+  const source = Array.from(input).map((emoji: string) => EMOJIS.indexOf(emoji))
   const points: number[] = []
   for (let i = 0; i < input.length; i += 4) {
     const alpha = source[i] >> 2
@@ -44,5 +63,5 @@ export function decode(input: string): Uint8Array {
     points.push(alpha, beta, gamma, delta, epsilon)
   }
 
-  return trimRight(Uint8Array.from(points))
+  return Uint8Array.from(trimRight(points).concat(expand))
 }
