@@ -1,6 +1,7 @@
 import { Codec, decode, encode } from '..'
 import { Base1024EmojiAlphabet as EMOJIS } from '../constants'
 
+const TAIL = '\ud83c\udfad'
 const codecs: Record<Codec, string> = {
   [Codec.UTF8]: 'Maskbook',
   [Codec.Hexadecimal]: '4d61736b626f6f6b',
@@ -42,6 +43,19 @@ test('real world AES example', () => {
   for (const codec of codecs) {
     expect(areEqual(decode(encode(decoded, codec), codec), decoded)).toBe(true)
   }
+})
+
+// Base1024 safe tail fuzz
+test('base1024 safe tail fuzz', () => {
+  const u8a = Uint8Array.from(
+    Array(0xfe)
+      .fill(0)
+      .map((_, i) => i),
+  )
+  const encoded = encode(u8a, Codec.Base1024)
+  const decoded = decode(encoded, Codec.Base1024)
+  expect(encoded.endsWith(TAIL)).toBe(true)
+  expect(decoded).toEqual(u8a)
 })
 
 function areEqual(a: Uint8Array, b: Uint8Array) {
