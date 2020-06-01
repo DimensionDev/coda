@@ -9,36 +9,36 @@ import { Codec, encode, decode ) from "@dimensiondev/coda";
 
 const decoded = decode("Maskbook", Codec.UTF8);
 
-encode(decoded, Codec.Hexadecimal); // '4d61736b626f6f6b'
-encode(decoded, Codec.Base64);      // 'TWFza2Jvb2s='
-encode(decoded, Codec.Base1024);    // '🐟🔂🏁🤖💧🚊😤🀄'
+encode(decoded, Codec.Hexadecimal);     // '4d61736b626f6f6b'
+encode(decoded, Codec.Base64);          // 'TWFza2Jvb2s='
+encode(decoded, Codec.Base1024Emoji);   // '🐟🔂🏁🤖💧🚊😤🀄'
 ```
 
 ## Desc
 
-All data will be formated into `Uint8Array` while we constructing the 
+All data will be formated into `Uint8Array` while we constructing the
 Codec class, for example, Let's format the word `Mask`!
- 
-### Base1024
- 
+
+### Base1024Emoji
+
 | Text    | Binary       | Index   |
 | :----:  | :----------: | :-----: |
 | 0x1f41f | 0100110101   | 309     |
 | 0x1f502 | 1000010111   | 535     |
 | 0x1f3c1 | 0011011010   | 218     |
 | 0x1f694 | 1100000000   | 768     |
- 
+
 ### UTF-8
- 
+
 | Text   | Binary     | Index   |
 | :----: | :--------: | :-----: |
 | M      | 01001101   | 77      |
 | a      | 01100001   | 97      |
 | s      | 01110011   | 115     |
 | k      | 01101011   | 107     |
- 
+
 ### Base64
- 
+
 | Text   | Binary   | Index   |
 | :----: | :------: | :-----: |
 | T      | 010011   | 19      |
@@ -48,9 +48,9 @@ Codec class, for example, Let's format the word `Mask`!
 | a      | 011010   | 26      |
 | s      | 110000   | 48      |
 | =      | 000000   |         |
- 
+
 ### Hex
- 
+
 | Text   | Binary   | Index   |
 | :----: | :------: | :-----: |
 | 4      | 0100     | 4       |

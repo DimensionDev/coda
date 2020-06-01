@@ -1,12 +1,12 @@
 import { Codec, decode, encode } from '..'
-import { base1024Emojis as EMOJIS } from '../constants'
+import { Base1024EmojiAlphabet as EMOJIS } from '../constants'
 
 const codecs: Record<Codec, string> = {
   [Codec.UTF8]: 'Maskbook',
   [Codec.Hexadecimal]: '4d61736b626f6f6b',
   [Codec.Base64]: 'TWFza2Jvb2s=',
   // prettier-ignore
-  [Codec.Base1024]: (
+  [Codec.Base1024Emoji]: (
     '\ud83d\udc1f\ud83d\udd02\ud83c\udfc1\ud83e\udd16' +
     '\ud83d\udca7\ud83d\ude8a\ud83d\ude24\ud83c\udc04'
   )
@@ -38,7 +38,7 @@ test('validate the chosen emojis', () => {
 // Real world AES example
 test('real world AES example', () => {
   const decoded = decode(SECRET_AES_WITH_LINK, Codec.UTF8)
-  const codecs = [Codec.Hexadecimal, Codec.UTF8, Codec.Base64, Codec.Base1024]
+  const codecs = [Codec.Hexadecimal, Codec.UTF8, Codec.Base64, Codec.Base1024Emoji]
   for (const codec of codecs) {
     expect(areEqual(decode(encode(decoded, codec), codec), decoded)).toBe(true)
   }
