@@ -2,47 +2,64 @@
 import { base1024Emojis as EMOJIS } from './constants'
 
 /**
- * Trim 0 caches while decoding base1024 to Uint8ARray
+ * Mask for empty tail
  */
-function trimRight(input: Uint8Array): Uint8Array {
-  for (let i = input.length; i > 0; i -= 1) {
-    if (input[i - 1] !== 0) {
-      return input.slice(0, i)
-    }
-  }
-  return input
-}
+const TAIL = '\ud83c\udfad'
 
 /**
  * Encode Uint8Array to base1024
  */
 export function encode(input: Uint8Array): string {
   const points: number[] = []
-  for (let i = 0; i < input.length; i += 5) {
+  const remainder = input.length % 5
+  const safe = input.length - remainder
+  for (let i = 0; i <= safe; i += 5) {
     const alpha = ((input[i] & 0xff) << 2) | (input[i + 1] >> 6)
     const beta = ((input[i + 1] & 0x3f) << 4) | (input[i + 2] >> 4)
     const gamma = ((input[i + 2] & 0xf) << 6) | (input[i + 3] >> 2)
     const delta = ((input[i + 3] & 0x3) << 8) | input[i + 4]
-    points.push(alpha, beta, gamma, delta)
+    if (i < safe) {
+      points.push(alpha, beta, gamma, delta)
+    } else if (i >= safe && remainder !== 0) {
+      points.push(...[alpha, beta, gamma, delta].slice(0, input.length - safe))
+    }
   }
-  return points.map((emoji) => EMOJIS[emoji]).join('')
+
+  // Check the last 8 empty bits
+  const res = points
+    .slice(0, points.length)
+    .map((emoji) => EMOJIS[emoji])
+    .join('')
+  return res + (remainder === 4 ? TAIL : '')
 }
 
 /**
  * Encode Uint8Array to base1024
  */
 export function decode(input: string): Uint8Array {
-  const source = Array.from(input).map((emoji: string) => EMOJIS.indexOf(emoji))
-
-  const points: number[] = []
-  for (let i = 0; i < input.length; i += 4) {
-    const alpha = source[i] >> 2
-    const beta = ((source[i] & 0x3) << 6) | (source[i + 1] >> 4)
-    const gamma = ((source[i + 1] & 0xf) << 4) | (source[i + 2] >> 6)
-    const delta = ((source[i + 2] & 0x3f) << 2) | (source[i + 3] >> 8)
-    const epsilon = source[i + 3] & 0xff
-    points.push(alpha, beta, gamma, delta, epsilon)
+  let tail = false
+  if (input.endsWith(TAIL)) {
+    input = input.slice(0, input.length - TAIL.length)
+    tail = true
   }
 
-  return trimRight(Uint8Array.from(points))
+  // Decode input string
+  const points = Array.from(input).map((emoji: string) => EMOJIS.indexOf(emoji))
+  const remainder = points.length % 4
+  const safe = points.length - remainder
+  const source: number[] = []
+  for (let i = 0; i <= safe; i += 4) {
+    const alpha = points[i] >> 2
+    const beta = ((points[i] & 0x3) << 6) | (points[i + 1] >> 4)
+    const gamma = ((points[i + 1] & 0xf) << 4) | (points[i + 2] >> 6)
+    const delta = ((points[i + 2] & 0x3f) << 2) | (points[i + 3] >> 8)
+    const epsilon = points[i + 3] & 0xff
+    if (i < safe) {
+      source.push(alpha, beta, gamma, delta, epsilon)
+    } else if (i >= safe && remainder !== 0) {
+      source.push(...[alpha, beta, gamma, delta, epsilon].slice(0, remainder))
+    }
+  }
+
+  return Uint8Array.from(source.slice(0, tail ? source.length - 1 : source.length))
 }
