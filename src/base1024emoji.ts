@@ -2,11 +2,7 @@
 import { Base1024EmojiAlphabet as EMOJIS } from './constants'
 
 /**
-<<<<<<< HEAD:src/base1024emoji.ts
  * Trim 0 caches while decoding Base1024Emoji to Uint8ARray
-=======
- * Mask for empty tail
->>>>>>> c3f9d0af256237d60b93333b3b42942a7d7be786:src/base1024.ts
  */
 const TAIL = '\ud83c\udfad'
 
