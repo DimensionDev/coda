@@ -1,3 +1,5 @@
+import * as Base64 from './base64'
+
 /* eslint-disable no-plusplus,no-bitwise */
 function encodeToUTF7(input: string) {
   const output = new Uint8Array(input.length * 2)
@@ -5,14 +7,14 @@ function encodeToUTF7(input: string) {
   for (let offset = 0; offset < input.length; offset++) {
     view.setUint16(offset * 2, input.charCodeAt(offset))
   }
-  return Buffer.from(output).toString('base64').replace(/=+$/, '')
+  return Base64.encode(output).replace(/=+$/, '')
 }
 
 function decodeFromUTF7(encoded: string) {
-  const input = Buffer.from(encoded, 'base64')
+  const input = Base64.decode(encoded)
   const output: number[] = []
   for (let offset = 0; offset < input.length; offset += 2) {
-    output.push(input.readUInt16BE(offset))
+    output.push(((input[offset] & 255) << 8) + (input[offset + 1] & 255))
   }
   return String.fromCharCode.apply(null, output)
 }
