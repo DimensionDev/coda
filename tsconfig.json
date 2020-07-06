@@ -14,5 +14,10 @@
     "sourceMap": true
   },
   "include": ["./src"],
-  "exclude": ["./src/constants/.macros", "./src/__tests__"]
+  "exclude": ["./src/constants/.macros", "./src/__tests__"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }
