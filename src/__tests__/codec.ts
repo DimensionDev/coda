@@ -8,8 +8,8 @@ const codecs: Record<Codec, string> = {
   [Codec.Base64]: 'TWFza2Jvb2s=',
   // prettier-ignore
   [Codec.Base1024Emoji]: (
-    '\ud83d\udc1f\ud83d\udd02\ud83c\udfc1\ud83e\udd16' +
-    '\ud83d\udca7\ud83d\ude8a\ud83d\ude24\ud83c\udc04'
+    '\uD83D\uDC1F\uD83D\uDD02\uD83C\uDFC1\uD83E' +
+    '\uDD16\uD83D\uDCA7\uD83D\uDE8A\uD83D\uDE24'
   )
 }
 
@@ -24,7 +24,7 @@ const SECRET_AES_WITH_LINK =
 test('build codec', () => {
   for (const codec of Object.keys(codecs) as Codec[]) {
     const decoded = decode(codecs[codec], codec)
-    expect(Buffer.from(decoded).toString('utf-8')).toEqual('Maskbook')
+    expect(Buffer.from(decoded).toString('hex')).toEqual(codecs[Codec.Hexadecimal])
     const encoded = encode(decoded, codec)
     expect(encoded).toEqual(codecs[codec])
   }
@@ -52,8 +52,8 @@ test('base1024 safe tail fuzz', () => {
       .fill(0)
       .map((_, i) => i),
   )
-  const encoded = encode(u8a, Codec.Base1024)
-  const decoded = decode(encoded, Codec.Base1024)
+  const encoded = encode(u8a, Codec.Base1024Emoji)
+  const decoded = decode(encoded, Codec.Base1024Emoji)
   expect(encoded.endsWith(TAIL)).toBe(true)
   expect(decoded).toEqual(u8a)
 })
