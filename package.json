@@ -8,17 +8,17 @@
   "main": "./dist-cjs/index.js",
   "module": "./dist-esm/index.js",
   "scripts": {
-    "build": "yarn build:emojis && rimraf dist-* && tsc && tsc -p tsconfig.esm.json",
+    "build": "npm run build:emojis && rimraf dist-* && tsc && tsc -p tsconfig.esm.json",
     "build:emojis": "npx ts-node src/constants/.macros/build-emojis.ts",
     "lint": "tsc --noEmit && eslint src/ --ext .ts --fix",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "npm run build",
     "test": "jest src"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn build:emojis && lint-staged",
+      "pre-commit": "npm run build:emojis && lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-push": "yarn lint && yarn test"
+      "pre-push": "npm run lint && npm run test"
     }
   },
   "lint-staged": {
