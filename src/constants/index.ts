@@ -4,17 +4,14 @@ import _Base1024EmojiAlphabet from './emojis.json'
 export const Base1024EmojiAlphabet = expandPoints(_Base1024EmojiAlphabet)
 
 function expandPoints(_points: string) {
-  const toInt = (value: string) => Number.parseInt(value, 36)
-  const points = _points
-    .split(',')
-    .reduce((points: number[], pair: string) => {
-      const [index, value] = pair.split('-').map(toInt)
-      points[index] = value
-      return points
-    }, Array(1024).fill(1))
-    .reduce((points: number[], point: number, index: number) => {
-      points.push(points[index - 1] + point || point)
-      return points
-    }, [])
+  const values = _points.split(',').map((value) => Number.parseInt(value, 36))
+  const points: number[] = Array(1024).fill(1)
+  for (let i = 0; i < values.length; i += 2) {
+    // [index, value, index, value, ...]
+    points[values[i]] = values[i + 1]
+  }
+  for (let i = 1; i < points.length; i += 1) {
+    points[i] = points[i - 1] + points[i]
+  }
   return Array.from(String.fromCodePoint.apply(null, points))
 }
