@@ -1,14 +1,10 @@
 /* eslint-disable no-bitwise */
 import { Base1024EmojiAlphabet as EMOJIS } from './constants'
 
-/**
- * Trim 0 caches while decoding Base1024Emoji to Uint8ARray
- */
+/** Trim 0 caches while decoding Base1024Emoji to Uint8Array */
 const TAIL = '\ud83c\udfad'
 
-/**
- * Encode Uint8Array to Base1024Emoji
- */
+/** Encode Uint8Array to Base1024Emoji */
 export function encode(input: Uint8Array): string {
   const points: number[] = []
   const remainder = input.length % 5
@@ -33,9 +29,7 @@ export function encode(input: Uint8Array): string {
   return res + (remainder === 4 ? TAIL : '')
 }
 
-/**
- * Encode Uint8Array to Base1024Emoji
- */
+/** Encode Uint8Array to Base1024Emoji */
 export function decode(input: string): Uint8Array {
   let tail = false
   if (input.endsWith(TAIL)) {
