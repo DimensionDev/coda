@@ -6,7 +6,7 @@ no need to be compiled in production.
 ## `./twemojis.json`
 
 | index  | desc              |
-|--------|-------------------|
+| ------ | ----------------- |
 | length | 2943              |
 | source | twemojis          |
 | change | Deleted all flags |
