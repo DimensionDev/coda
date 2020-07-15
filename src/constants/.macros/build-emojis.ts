@@ -27,10 +27,9 @@ function makeDifferencePairs(points: number[]) {
 }
 
 async function main() {
-  const diffPoints = makeDifferencePairs(points).map((value: number) => value.toString(36))
+  const diffPoints = makeDifferencePairs(points).map((value) => value.toString(36))
   console.log('Diff Points:', diffPoints.length / 2)
-  const data = JSON.stringify(diffPoints.join(','))
-  await fs.writeFile(BLOB_PATH, data)
+  await fs.writeFile(BLOB_PATH, JSON.stringify(diffPoints.join(',')))
   console.log('Make blob table done')
 }
 
