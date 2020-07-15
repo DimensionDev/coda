@@ -1,7 +1,9 @@
 #!/usr/bin/env npx ts-node
-import fs from 'fs'
+import { promises as fs } from 'fs'
 import path from 'path'
 import { source } from './twemojis.json'
+
+const BLOB_PATH = path.join(__dirname, '..', 'emojis.json')
 
 const points = source
   .filter((point) => point.length < 6)
@@ -13,20 +15,23 @@ const points = source
   .sort((a, b) => a - b)
   .slice(0, 1024)
 
-const diffPoints = points
-  .map((point, index, points) => points[index] - points[index - 1] || point)
-  .reduce((points: number[], value, index) => {
-    if (value === 1) return points
-    points.push(index, value)
-    return points
-  }, [])
+function makeDifferencePairs(points: number[]) {
+  const pairs = [0, points[0]]
+  for (let i = 1; i < points.length; i++) {
+    const value = points[i] - points[i - 1]
+    if (value > 1) {
+      pairs.push(i, value)
+    }
+  }
+  return pairs
+}
 
-console.log('Diff Points:', diffPoints.length / 2)
+async function main() {
+  const diffPoints = makeDifferencePairs(points).map((value: number) => value.toString(36))
+  console.log('Diff Points:', diffPoints.length / 2)
+  const data = JSON.stringify(diffPoints.join(','))
+  await fs.writeFile(BLOB_PATH, data)
+  console.log('Make blob table done')
+}
 
-const toBase36 = (value: number) => value.toString(36)
-
-const data = JSON.stringify(diffPoints.map(toBase36).join(','))
-
-fs.writeFileSync(path.join(__dirname, '..', 'emojis.json'), data)
-
-console.log('Make json format done')
+main()
