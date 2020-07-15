@@ -9,8 +9,8 @@
   "module": "./dist-esm/index.js",
   "scripts": {
     "build": "npm run build:emojis && rimraf dist-* && tsc && tsc -p tsconfig.esm.json",
-    "build:emojis": "npx ts-node src/constants/.macros/build-emojis.ts",
-    "lint": "tsc --noEmit && eslint src/ --ext .ts --fix",
+    "build:emojis": "ts-node src/constants/.macros/build-emojis.ts",
+    "lint": "tsc --noEmit && eslint src --ext .ts --fix",
     "prepublishOnly": "npm run build",
     "test": "jest src"
   },
