@@ -18,14 +18,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Deps
-        run: npm ci
+      - name: Install and Test
+        run: npm cit
       - name: Lint
         run: npm run lint
-      - name: Build
-        run: npm run build
-      - name: Test
-        run: npm test
       - name: Publish to GitHub Package (unstable)
         run: ./scripts/publish-to-github.sh
         env:
