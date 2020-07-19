@@ -15,11 +15,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Delete Package Versions
-        uses: actions/delete-package-versions@v1.0.2
-        with:
-          package-name: coda
-          num-old-versions-to-delete: 1
       - name: Authenticate NPM
         uses: jgierer12/npm-auth-gpr@v1
         with:
