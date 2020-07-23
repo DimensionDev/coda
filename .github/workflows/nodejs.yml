@@ -16,9 +16,7 @@ jobs:
         with:
           node-version: 12.x
       - name: Authenticate NPM
-        uses: jgierer12/npm-auth-gpr@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+        uses: NiceLabs/automatic-github-token@master
       - name: Install and Test
         run: npm cit
       - name: Lint

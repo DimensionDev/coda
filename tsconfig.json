@@ -9,7 +9,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
 
-    "outDir": "./dist-cjs",
+    "outDir": "./cjs",
     "declaration": true,
     "sourceMap": true
   },

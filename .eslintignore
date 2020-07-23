@@ -1,2 +1,3 @@
 /src/utils/.macros
-/dist-*
+/cjs
+/esm

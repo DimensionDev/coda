@@ -1,5 +1,5 @@
-!/dist-cjs
-!/dist-esm
+!/cjs
+!/esm
 
 .*
 /jest.config.js
