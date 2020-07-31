@@ -16,7 +16,9 @@ jobs:
         with:
           node-version: 12.x
       - name: Authenticate NPM
-        uses: NiceLabs/automatic-github-token@master
+        uses: NiceLabs/automatic-github-token@v2
+        with:
+          registry: true
       - name: Install and Test
         run: npm cit
       - name: Lint
