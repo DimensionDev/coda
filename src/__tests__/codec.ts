@@ -10,7 +10,7 @@ const codecs: Record<Codec, string> = {
   [Codec.Base1024Emoji]: (
     '\uD83D\uDC1F\uD83D\uDD02\uD83C\uDFC1\uD83E' +
     '\uDD16\uD83D\uDCA7\uD83D\uDE8A\uD83D\uDE24'
-  )
+  ),
 }
 
 const SECRET_AES_WITH_LINK =
